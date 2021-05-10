@@ -85,6 +85,32 @@ double test2_u0(const double& x, const double& y, const double& t)
 }
 #pragma endregion
 
+#pragma region Тест №3
+// Правая часть
+double test3_f(const double& x, const double& y, const double& t)
+{
+    return 4;
+}
+
+// Краевое условие 1-го рода
+double test3_bc1_func(const double& x, const double& y, const double& t)
+{
+    return 1.5 * x + 2 * t;
+}
+
+// Точное решение
+double test3_exact_solution(const double& x, const double& y, const double& t)
+{
+    return 1.5 * x + 2 * t;
+}
+
+// Начальное условие
+double test3_u0(const double& x, const double& y, const double& t)
+{
+    return 1.5 * x + 2 * t;
+}
+#pragma endregion
+
 void solve_parabolic_problem(
     const std::string& base_path,
     const int& num_test,
@@ -123,7 +149,7 @@ int main()
         test1_exact_solution
     );*/
 
-    bc1_f = { test2_bc1_func };
+    /*bc1_f = { test2_bc1_func };
     bc2_f = { test2_bc2_func };
     bc3_f = { test2_bc3_func };
 
@@ -136,6 +162,21 @@ int main()
         bc2_f,
         bc3_f,
         test2_exact_solution
+    );*/
+
+    bc1_f = { test3_bc1_func };
+    bc2_f = { };
+    bc3_f = { };
+
+    solve_parabolic_problem(
+        BASE_PATH,
+        2,
+        test3_f,
+        test3_u0,
+        bc1_f,
+        bc2_f,
+        bc3_f,
+        test3_exact_solution
     );
 
 //#pragma region Функции правой части
@@ -525,6 +566,11 @@ void solve_parabolic_problem(
             tetta2 = -(delta_t4 * delta_t0) / (delta_t5 * delta_t3 * delta_t1),
             tetta3 = (delta_t3 * delta_t0) / (delta_t5 * delta_t4 * delta_t2);
 
+        /*double tetta0 = (delta_t0 * (delta_t2 + delta_t1)) / (delta_t2 * delta_t1 * delta_t0),
+            tetta1 = -(delta_t2 * delta_t1) / (delta_t4 * delta_t3 * delta_t0),
+            tetta2 = (delta_t2 * delta_t0) / (delta_t5 * delta_t3 * delta_t1),
+            tetta3 = -(delta_t1 * delta_t0) / (delta_t5 * delta_t4 * delta_t2);*/
+
         // Формируем матрицу СЛАУ и вектор правой части
         std::vector<double> Gq_j_1(q[i - 1].size());
         G_global.dot_vector(q[i - 1], Gq_j_1);
@@ -543,9 +589,9 @@ void solve_parabolic_problem(
 
         std::vector<double> right(b_global);
         vec_diff(right, right, Gq_j_1);
-        vec_diff(right, right, Mq_j_3);
-        vec_sum(right, right, Mq_j_2);
-        vec_diff(right, right, Mq_j_1);
+        vec_sum(right, right, Mq_j_3);
+        vec_diff(right, right, Mq_j_2);
+        vec_sum(right, right, Mq_j_1);
 
         SparseMatrix A = M_global.dot_scalar(tetta0);
         A += M_S3;
@@ -629,39 +675,6 @@ void solve_parabolic_problem(
                     true
                 );
         }
-
-        //// В цикле по конечным элементам
-        //for (int j = 0; j < num_elems; j++)
-        //{
-        //    // Обрабатываем каждое краевое условие 2-го рода
-        //    for (int k = 0; k < num_bc2; k++)
-        //        second_kind_boundary_cond(
-        //            b_global,
-        //            bc2[k],
-        //            k,
-        //            elems[j],
-        //            j,
-        //            grid,
-        //            time_grid[i],
-        //            bc2_f[bc2[k].back()]
-        //        );
-
-        //    // Обрабатываем каждое краевое условие 3-го рода
-        //    for (int k = 0; k < num_bc3; k++)
-        //        third_kind_boundary_cond(
-        //            M_S3,
-        //            b_global,
-        //            bc3[k],
-        //            bc3_beta[k],
-        //            k,
-        //            elems[j],
-        //            j,
-        //            grid,
-        //            time_grid[i],
-        //            bc3_f[bc3[k].back()],
-        //            true
-        //        );
-        //}
     }
 #pragma endregion
 
@@ -793,7 +806,12 @@ double get_solution_in_point(
             tetta1 = -(t - time_grid[j - 3]) * (t - time_grid[j - 2]) * (t - time_grid[j]) / (delta_t4 * delta_t3 * delta_t0),
             tetta2 = (t - time_grid[j - 3]) * (t - time_grid[j - 1]) * (t - time_grid[j]) / (delta_t5 * delta_t3 * delta_t1),
             tetta3 = -(t - time_grid[j - 2]) * (t - time_grid[j - 1]) * (t - time_grid[j]) / (delta_t2 * delta_t1 * delta_t0);
-    
+
+        /*double tetta0 = (t - time_grid[j - 3]) * (t - time_grid[j - 2]) * (t - time_grid[j - 1]) / (delta_t2 * delta_t1 * delta_t0),
+            tetta1 = -(t - time_grid[j - 3]) * (t - time_grid[j - 2]) * (t - time_grid[j]) / (delta_t4 * delta_t3 * delta_t0),
+            tetta2 = (t - time_grid[j - 3]) * (t - time_grid[j - 1]) * (t - time_grid[j]) / (delta_t5 * delta_t3 * delta_t1),
+            tetta3 = -(t - time_grid[j - 2]) * (t - time_grid[j - 1]) * (t - time_grid[j]) / (delta_t5 * delta_t4 * delta_t2);*/
+
         auto q0 = q[j],
             q1 = q[j - 1],
             q2 = q[j - 2],
