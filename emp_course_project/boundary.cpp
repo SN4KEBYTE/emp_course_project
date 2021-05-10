@@ -73,7 +73,7 @@ void second_kind_boundary_cond(
     if (b3 != -1 && b2 == b3)
     {
         double coef = mesG(grid[el.n2], grid[el.n3]) / 6,
-            teta1 = bc2_func(grid[el.n1].x, grid[el.n1].y, t),
+            teta1 = bc2_func(grid[el.n2].x, grid[el.n2].y, t),
             teta2 = bc2_func(grid[el.n3].x, grid[el.n3].y, t);
         b_global[el[1]] += coef * (2 * teta1 + teta2);
         b_global[el[2]] += coef * (teta1 + 2 * teta2);

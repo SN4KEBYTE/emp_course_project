@@ -1,6 +1,7 @@
 ﻿// main.cpp
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <vector>
 #include <string>
@@ -12,7 +13,7 @@
 #include "boundary.h"
 
 typedef std::vector<double(*)(const double& x, const double& y, const double& t)> f_funcs;
-typedef std::vector<double(*)(const Node&)> bc1_funcs;
+typedef std::vector<double(*)(const double& x, const double& y, const double& t)> bc1_funcs;
 typedef std::vector<double(*)(const double& x, const double& y, const double& t)> bc2_funcs;
 typedef std::vector<double(*)(const double& x, const double& y, const double& t)> bc3_funcs;
 typedef std::vector<double(*)(const double& x, const double& y, const double& t)> es_funcs;
@@ -28,7 +29,7 @@ double test1_f(const double& x, const double& y, const double& t)
 }
 
 // Краевое условие 1-го рода
-double test1_bc1_func(const Node& n)
+double test1_bc1_func(const double& x, const double& y, const double& t)
 {
     return 1;
 }
@@ -48,173 +49,39 @@ double test1_u0(const double& x, const double& y, const double& t)
 
 #pragma region Тест №2
 // Правая часть
-double test2_f(const int& num_elem, const Node& n)
+double test2_f(const double& x, const double& y, const double& t)
 {
-    return num_elem == 0 ? -20 : 0;
+    return 6 * t * t + 4;
 }
 
 // Краевое условие 1-го рода
-double test2_bc1_func(const Node& n)
+double test2_bc1_func(const double& x, const double& y, const double& t)
 {
-    return n.y * n.y;
+    return 1.5 * x + t * t * t + 2 * t;
 }
 
-// Краевое условие 2-го рода на ребре S12
-double test2_bc2_func_s12(const int& num_elem, const Node& n)
-{
-    return 20;
-}
-
-// Краевое условие 2-го рода на ребре S22
-double test2_bc2_func_s22(const int& num_elem, const Node& n)
+// Краевое условие 2-го рода
+double test2_bc2_func(const double& x, const double& y, const double& t)
 {
     return 0;
 }
 
 // Краевое условие 3-го рода
-double test2_bc3_func(const int& num_elem, const Node& n)
+double test2_bc3_func(const double& x, const double& y, const double& t)
 {
-    return 20 * n.y - 27;
+    return 1.5 + 1.5 * x + t * t * t + 2 * t;
 }
 
 // Точное решение
-double test2_exact_solution(const int& num_elem, const Node& n)
+double test2_exact_solution(const double& x, const double& y, const double& t)
 {
-    return num_elem == 0 ? n.y * n.y : 20 * n.y - 19;
-}
-#pragma endregion
-
-#pragma region Тест №3, 4, 5, 9, 10
-// Правая часть
-double test3_f(const int& num_elem, const Node& n)
-{
-    return -exp(n.x + n.y);
+    return 1.5 * x + t * t * t + 2 * t;
 }
 
-// Краевое условие 1-го рода
-double test3_bc1_func(const Node& n)
+// Начальное условие
+double test2_u0(const double& x, const double& y, const double& t)
 {
-    return exp(n.x);
-}
-
-// Краевое условие 2-го рода на ребре 1-3
-double test3_bc2_func_0(const int& num_elem, const Node& n)
-{
-    return 2 * exp(n.x + n.y);
-}
-
-// Краевое условие 2-го рода на ребре 0-2
-double test3_bc2_func_1(const int& num_elem, const Node& n)
-{
-    return -2 * exp(n.x + n.y);
-}
-
-// Краевое условие 3-го рода
-double test3_bc3_func(const int& num_elem, const Node& n)
-{
-    return exp(n.x + 1) - 2 * exp(n.x + n.y);
-}
-
-// Точное решение
-double test3_exact_solution(const int& num_elem, const Node& n)
-{
-    return exp(n.x + n.y);
-}
-#pragma endregion
-
-#pragma region Тест №6
-// Правая часть
-double test6_f(const int& num_elem, const Node& n)
-{
-    return 2 * (n.x + n.y);
-}
-
-// Краевое условие 1-го рода
-double test6_bc1_func0(const Node& n)
-{
-    return n.y;
-}
-
-// Краевое условие 1-го рода
-double test6_bc1_func1(const Node& n)
-{
-    return n.x + 1;
-}
-
-// Краевое условие 1-го рода
-double test6_bc1_func2(const Node& n)
-{
-    return n.x + n.y;
-}
-
-// Точное решение
-double test6_exact_solution(const int& num_elem, const Node& n)
-{
-    return n.x + n.y;
-}
-#pragma endregion
-
-#pragma region Тест №7
-// Правая часть
-double test7_f(const int& num_elem, const Node& n)
-{
-    return 2 * (n.x * n.x + n.y * n.y) - 4;
-}
-
-// Краевое условие 1-го рода
-double test7_bc1_func0(const Node& n)
-{
-    return n.y * n.y;
-}
-
-// Краевое условие 1-го рода
-double test7_bc1_func1(const Node& n)
-{
-    return n.x * n.x + 1;
-}
-
-// Краевое условие 1-го рода
-double test7_bc1_func2(const Node& n)
-{
-    return n.x * n.x + n.y * n.y;
-}
-
-// Точное решение
-double test7_exact_solution(const int& num_elem, const Node& n)
-{
-    return n.x * n.x + n.y * n.y;
-}
-#pragma endregion
-
-#pragma region Тест №8
-// Правая часть
-double test8_f(const int& num_elem, const Node& n)
-{
-    return 2 * (n.x * n.x * n.x + n.y * n.y * n.y - 3 * (n.x + n.y));
-}
-
-// Краевое условие 1-го рода
-double test8_bc1_func0(const Node& n)
-{
-    return n.y * n.y * n.y;
-}
-
-// Краевое условие 1-го рода
-double test8_bc1_func1(const Node& n)
-{
-    return n.x * n.x * n.x + 1;
-}
-
-// Краевое условие 1-го рода
-double test8_bc1_func2(const Node& n)
-{
-    return n.x * n.x * n.x + n.y * n.y * n.y;
-}
-
-// Точное решение
-double test8_exact_solution(const int& num_elem, const Node& n)
-{
-    return n.x * n.x * n.x + n.y * n.y * n.y;
+    return 1.5 * x + t * t * t + 2 * t;
 }
 #pragma endregion
 
@@ -226,7 +93,7 @@ void solve_parabolic_problem(
     const bc1_funcs& bc1_f,
     const bc2_funcs& bc2_f,
     const bc3_funcs& bc3_f,
-    double(*es_f)(const double& x, const double& y, const double& t),
+    double(*es_f)(const double& x, const double& y, const double& t)
 );
 
 double get_solution_in_point(
@@ -245,7 +112,7 @@ int main()
     bc2_funcs bc2_f = {};
     bc3_funcs bc3_f = {};
 
-    solve_parabolic_problem(
+    /*solve_parabolic_problem(
         BASE_PATH,
         0,
         test1_f,
@@ -254,6 +121,21 @@ int main()
         bc2_f,
         bc3_f,
         test1_exact_solution
+    );*/
+
+    bc1_f = { test2_bc1_func };
+    bc2_f = { test2_bc2_func };
+    bc3_f = { test2_bc3_func };
+
+    solve_parabolic_problem(
+        BASE_PATH,
+        1,
+        test2_f,
+        test2_u0,
+        bc1_f,
+        bc2_f,
+        bc3_f,
+        test2_exact_solution
     );
 
 //#pragma region Функции правой части
@@ -327,8 +209,6 @@ int main()
     //    /*solve_elliptic_problem(BASE_PATH, tn, all_f[tn], all_bc1[tn],
     //        all_bc2[tn], all_bc3[tn], all_es[tn]);*/
     //}
-
-    system("pause");
 
     return 0;
 }
@@ -675,12 +555,12 @@ void solve_parabolic_problem(
         {
             int bc1_node1 = bc1[j][0], bc1_node2 = bc1[j][1], f_num = bc1[j][2];
 
-            double val1 = bc1_f[f_num](grid[bc1_node1]),
-                val2 = bc1_f[f_num](grid[bc1_node2]);
+            double val1 = bc1_f[f_num](grid[bc1_node1].x, grid[bc1_node1].y, time_grid[i]),
+                val2 = bc1_f[f_num](grid[bc1_node2].x, grid[bc1_node2].y, time_grid[i]);
 
             first_kind_boundary_cond(
                 A,
-                right, // b_global был изначально
+                right,
                 bc1_node1,
                 val1,
                 bc1_node2,
@@ -719,11 +599,7 @@ void solve_parabolic_problem(
             b_global[elems[j].n1] += b_loc[0];
             b_global[elems[j].n2] += b_loc[1];
             b_global[elems[j].n3] += b_loc[2];
-        }
 
-        // В цикле по конечным элементам
-        for (int j = 0; j < num_elems; j++)
-        {
             // Обрабатываем каждое краевое условие 2-го рода
             for (int k = 0; k < num_bc2; k++)
                 second_kind_boundary_cond(
@@ -753,19 +629,73 @@ void solve_parabolic_problem(
                     true
                 );
         }
+
+        //// В цикле по конечным элементам
+        //for (int j = 0; j < num_elems; j++)
+        //{
+        //    // Обрабатываем каждое краевое условие 2-го рода
+        //    for (int k = 0; k < num_bc2; k++)
+        //        second_kind_boundary_cond(
+        //            b_global,
+        //            bc2[k],
+        //            k,
+        //            elems[j],
+        //            j,
+        //            grid,
+        //            time_grid[i],
+        //            bc2_f[bc2[k].back()]
+        //        );
+
+        //    // Обрабатываем каждое краевое условие 3-го рода
+        //    for (int k = 0; k < num_bc3; k++)
+        //        third_kind_boundary_cond(
+        //            M_S3,
+        //            b_global,
+        //            bc3[k],
+        //            bc3_beta[k],
+        //            k,
+        //            elems[j],
+        //            j,
+        //            grid,
+        //            time_grid[i],
+        //            bc3_f[bc3[k].back()],
+        //            true
+        //        );
+        //}
     }
 #pragma endregion
 
 #pragma region Вывод результата
+    int num_test_points = 0;
+
+    in.open(path + "test_points.txt");
+    in >> num_test_points;
+
     std::ofstream out(path + "res.csv");
+    out.precision(17);
     
-    /*for (const auto& p : points_for_result)
+    out << "x,y,t,u,u*,err\n";
+
+    for (int i = 0; i < num_test_points; i++)
     {
-        double x = p.first.x, y = p.first.y, t = p.second;
+        double test_x = 0, test_y = 0;
+        in >> test_x >> test_y;
 
-        std::cout << get_solution_in_point(x, y, t, q, grid, elems, time_grid);
-    }*/
+        for (int j = 0; j < time_grid.size(); j++)
+        {
+            double u = get_solution_in_point(test_x, test_y, time_grid[j], q, grid, elems, time_grid),
+                u_es = es_f(test_x, test_y, time_grid[j]);
 
+            if (j == 0)
+                out << test_x << "," << test_y << ",";
+            else
+                out << ",,";
+
+            out  << time_grid[j] << "," << u << "," << u_es << "," << abs(u - u_es) << "\n";
+        }
+    }
+    
+    in.close();
     out.close();
 #pragma endregion
 }
@@ -780,7 +710,7 @@ double get_solution_in_point(
     const std::vector<double>& time_grid
 )
 {
-    double res = 0., det_D = 0.;
+    double det_D = 0.;
     int i = 0;
     std::vector<double> s(3);
     FiniteElement cur_el;
@@ -817,7 +747,6 @@ double get_solution_in_point(
 
     if (j == time_grid.size())
         throw "Точка не принадлежит заданному временному отрезку";
-
 
     // Если не хватает слоев, аппроксимируем по времени линейным базисом
     if (j < 2)
@@ -877,6 +806,4 @@ double get_solution_in_point(
 
         return tetta3 * u3 + tetta2 * u2 + tetta1 * u1 + tetta0 * u0;
     }
-
-    return res;
 }

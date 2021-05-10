@@ -24,4 +24,4 @@ std::ostream& operator << (
         out << g << " ";
     
     return out;
-}
+}
