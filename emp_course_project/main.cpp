@@ -17,33 +17,72 @@ typedef std::vector<double(*)(const double& x, const double& y, const double& t)
 typedef std::vector<double(*)(const double& x, const double& y, const double& t)> bc2_funcs;
 typedef std::vector<double(*)(const double& x, const double& y, const double& t)> bc3_funcs;
 typedef std::vector<double(*)(const double& x, const double& y, const double& t)> es_funcs;
+typedef std::vector<double(*)(const double& x, const double& y, const double& t)> u0_funcs;
 
 const std::string BASE_PATH = "tests/";
-const int TESTS_NUM = 10;
+const int TESTS_NUM = 11;
 
-#pragma region Тест №1
+#pragma region Тест №0
 // Правая часть
-double test1_f(const double& x, const double& y, const double& t)
+double test0_f(const double& x, const double& y, const double& t)
 {
     return 0;
 }
 
 // Краевое условие 1-го рода
-double test1_bc1_func(const double& x, const double& y, const double& t)
+double test0_bc1_func(const double& x, const double& y, const double& t)
 {
     return 1;
 }
 
 // Точное решение
-double test1_exact_solution(const double& x, const double& y, const double& t)
+double test0_exact_solution(const double& x, const double& y, const double& t)
 {
     return 1;
 }
 
 // Начальное условие
-double test1_u0(const double& x, const double& y, const double& t)
+double test0_u0(const double& x, const double& y, const double& t)
 {
     return 1;
+}
+#pragma endregion
+
+#pragma region Тест №1
+// Правая часть
+double test1_f(const double& x, const double& y, const double& t)
+{
+    return 6 * t * t + 4;
+}
+
+// Краевое условие 1-го рода
+double test1_bc1_func(const double& x, const double& y, const double& t)
+{
+    return 1.5 * x + t * t * t + 2 * t;
+}
+
+// Краевое условие 2-го рода
+double test1_bc2_func(const double& x, const double& y, const double& t)
+{
+    return 0;
+}
+
+// Краевое условие 3-го рода
+double test1_bc3_func(const double& x, const double& y, const double& t)
+{
+    return 1.5 + 1.5 * x + t * t * t + 2 * t;
+}
+
+// Точное решение
+double test1_exact_solution(const double& x, const double& y, const double& t)
+{
+    return 1.5 * x + t * t * t + 2 * t;
+}
+
+// Начальное условие
+double test1_u0(const double& x, const double& y, const double& t)
+{
+    return 1.5 * x + t * t * t + 2 * t;
 }
 #pragma endregion
 
@@ -51,37 +90,25 @@ double test1_u0(const double& x, const double& y, const double& t)
 // Правая часть
 double test2_f(const double& x, const double& y, const double& t)
 {
-    return 6 * t * t + 4;
+    return 0;
 }
 
 // Краевое условие 1-го рода
 double test2_bc1_func(const double& x, const double& y, const double& t)
 {
-    return 1.5 * x + t * t * t + 2 * t;
-}
-
-// Краевое условие 2-го рода
-double test2_bc2_func(const double& x, const double& y, const double& t)
-{
-    return 0;
-}
-
-// Краевое условие 3-го рода
-double test2_bc3_func(const double& x, const double& y, const double& t)
-{
-    return 1.5 + 1.5 * x + t * t * t + 2 * t;
+    return 1;
 }
 
 // Точное решение
 double test2_exact_solution(const double& x, const double& y, const double& t)
 {
-    return 1.5 * x + t * t * t + 2 * t;
+    return 1;
 }
 
 // Начальное условие
 double test2_u0(const double& x, const double& y, const double& t)
 {
-    return 1.5 * x + t * t * t + 2 * t;
+    return 1;
 }
 #pragma endregion
 
@@ -89,25 +116,129 @@ double test2_u0(const double& x, const double& y, const double& t)
 // Правая часть
 double test3_f(const double& x, const double& y, const double& t)
 {
-    return 4;
+    return 2;
 }
 
 // Краевое условие 1-го рода
 double test3_bc1_func(const double& x, const double& y, const double& t)
 {
-    return 1.5 * x + 2 * t;
+    return x + y + t;
 }
 
 // Точное решение
 double test3_exact_solution(const double& x, const double& y, const double& t)
 {
-    return 1.5 * x + 2 * t;
+    return x + y + t;
 }
 
 // Начальное условие
 double test3_u0(const double& x, const double& y, const double& t)
 {
-    return 1.5 * x + 2 * t;
+    return x + y + t;
+}
+#pragma endregion
+
+#pragma region Тест №4
+// Правая часть
+double test4_f(const double& x, const double& y, const double& t)
+{
+    return 4 * t - 8;
+}
+
+// Краевое условие 1-го рода
+double test4_bc1_func(const double& x, const double& y, const double& t)
+{
+    return x * x + y * y + t * t;
+}
+
+// Точное решение
+double test4_exact_solution(const double& x, const double& y, const double& t)
+{
+    return x * x + y * y + t * t;
+}
+
+// Начальное условие
+double test4_u0(const double& x, const double& y, const double& t)
+{
+    return x * x + y * y + t * t;
+}
+#pragma endregion
+
+#pragma region Тест №5
+// Правая часть
+double test5_f(const double& x, const double& y, const double& t)
+{
+    return 6 * t * t - 12 * x - 12 * y;
+}
+
+// Краевое условие 1-го рода
+double test5_bc1_func(const double& x, const double& y, const double& t)
+{
+    return x * x * x + y * y * y + t * t * t;
+}
+
+// Точное решение
+double test5_exact_solution(const double& x, const double& y, const double& t)
+{
+    return x * x * x + y * y * y + t * t * t;
+}
+
+// Начальное условие
+double test5_u0(const double& x, const double& y, const double& t)
+{
+    return x * x * x + y * y * y + t * t * t;
+}
+#pragma endregion
+
+#pragma region Тест №6
+// Правая часть
+double test6_f(const double& x, const double& y, const double& t)
+{
+    return 8 * t * t * t - 24 * x * x - 24 * y * y;
+}
+
+// Краевое условие 1-го рода
+double test6_bc1_func(const double& x, const double& y, const double& t)
+{
+    return x * x * x * x + y * y * y * y + t * t * t * t;
+}
+
+// Точное решение
+double test6_exact_solution(const double& x, const double& y, const double& t)
+{
+    return x * x * x * x + y * y * y * y + t * t * t * t;
+}
+
+// Начальное условие
+double test6_u0(const double& x, const double& y, const double& t)
+{
+    return x * x * x * x + y * y * y * y + t * t * t * t;
+}
+#pragma endregion
+
+#pragma region Тест №7, 8, 9, 10
+// Правая часть
+double test7_f(const double& x, const double& y, const double& t)
+{
+    return 4 * t + 4;
+}
+
+// Краевое условие 1-го рода
+double test7_bc1_func(const double& x, const double& y, const double& t)
+{
+    return t * t + 2 * t + 1;
+}
+
+// Точное решение
+double test7_exact_solution(const double& x, const double& y, const double& t)
+{
+    return t * t + 2 * t + 1;
+}
+
+// Начальное условие
+double test7_u0(const double& x, const double& y, const double& t)
+{
+    return t * t + 2 * t + 1;
 }
 #pragma endregion
 
@@ -134,122 +265,117 @@ double get_solution_in_point(
 
 int main()
 {
-    bc1_funcs bc1_f = {test1_bc1_func};
-    bc2_funcs bc2_f = {};
-    bc3_funcs bc3_f = {};
-
-    /*solve_parabolic_problem(
-        BASE_PATH,
-        0,
+#pragma region Функции правой части
+    f_funcs all_f = { 
+        test0_f,
         test1_f,
-        test1_u0,
-        bc1_f,
-        bc2_f,
-        bc3_f,
-        test1_exact_solution
-    );*/
-
-    /*bc1_f = { test2_bc1_func };
-    bc2_f = { test2_bc2_func };
-    bc3_f = { test2_bc3_func };
-
-    solve_parabolic_problem(
-        BASE_PATH,
-        1,
-        test2_f,
-        test2_u0,
-        bc1_f,
-        bc2_f,
-        bc3_f,
-        test2_exact_solution
-    );*/
-
-    bc1_f = { test3_bc1_func };
-    bc2_f = { };
-    bc3_f = { };
-
-    solve_parabolic_problem(
-        BASE_PATH,
-        2,
+        test2_f, 
         test3_f,
+        test4_f,
+        test5_f,
+        test6_f,
+        test7_f,
+        test7_f,
+        test7_f,
+        test7_f
+    };
+#pragma endregion
+
+#pragma region Функции для краевых 1-го рода
+    std::vector<bc1_funcs> all_bc1 = {
+        {test0_bc1_func},
+        {test1_bc1_func},
+        {test2_bc1_func},
+        {test3_bc1_func},
+        {test4_bc1_func},
+        {test5_bc1_func},
+        {test6_bc1_func},
+        {test7_bc1_func},
+        {test7_bc1_func},
+        {test7_bc1_func},
+        {test7_bc1_func},
+    };
+#pragma endregion
+
+#pragma region Функции для краевых 2-го рода
+    std::vector<bc2_funcs> all_bc2 = {
+        {},
+        {test1_bc2_func},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+    };
+#pragma endregion
+
+#pragma region Функции для краевых 3-го рода
+    std::vector<bc3_funcs> all_bc3 = {
+        {},
+        {test1_bc3_func},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+    };
+#pragma endregion
+
+#pragma region Точные решения
+    es_funcs all_es = {
+        test0_exact_solution,
+        test1_exact_solution,
+        test2_exact_solution,
+        test3_exact_solution,
+        test4_exact_solution,
+        test5_exact_solution,
+        test6_exact_solution,
+        test7_exact_solution,
+        test7_exact_solution,
+        test7_exact_solution,
+        test7_exact_solution,
+    };
+#pragma endregion
+
+#pragma region Начальные условия
+    u0_funcs all_u0 = {
+        test0_u0,
+        test1_u0,
+        test2_u0,
         test3_u0,
-        bc1_f,
-        bc2_f,
-        bc3_f,
-        test3_exact_solution
-    );
+        test4_u0,
+        test5_u0,
+        test6_u0,
+        test7_u0,
+        test7_u0,
+        test7_u0,
+        test7_u0,
+    };
+#pragma endregion
 
-//#pragma region Функции правой части
-//    f_funcs all_f = { test1_f, test2_f, test3_f, test3_f, test3_f,
-//   test6_f, test7_f, test8_f, test3_f, test3_f };
-//#pragma endregion
-//
-//#pragma region Функции для краевых 1-го рода
-//    std::vector<bc1_funcs> all_bc1 = {
-//    {test1_bc1_func},
-//    {test2_bc1_func},
-//    {test3_bc1_func},
-//    {test3_bc1_func},
-//    {test3_bc1_func},
-//    {test6_bc1_func0, test6_bc1_func1, test6_bc1_func2},
-//    {test7_bc1_func0, test7_bc1_func1, test7_bc1_func2},
-//    {test8_bc1_func0, test8_bc1_func1, test8_bc1_func2},
-//    {test3_bc1_func},
-//    {test3_bc1_func} };
-//#pragma endregion
-//
-//#pragma region Функции для краевых 2-го рода
-//    std::vector<bc2_funcs> all_bc2 = {
-//        {},
-//        {test2_bc2_func_s12, test2_bc2_func_s22},
-//        {test3_bc2_func_0, test3_bc2_func_1},
-//        {test3_bc2_func_0, test3_bc2_func_1},
-//        {test3_bc2_func_0, test3_bc2_func_1},
-//        {},
-//        {},
-//        {},
-//        {test3_bc2_func_0, test3_bc2_func_1},
-//        {test3_bc2_func_0, test3_bc2_func_1}
-//    };
-//#pragma endregion
-//
-//#pragma region Функции для краевых 3-го рода
-//    std::vector<bc3_funcs> all_bc3 = {
-//        {},
-//        {test2_bc3_func},
-//        {test3_bc3_func},
-//        {test3_bc3_func},
-//        {test3_bc3_func},
-//        {},
-//        {},
-//        {},
-//        {test3_bc3_func},
-//        {test3_bc3_func}
-//    };
-//#pragma endregion
-//
-//#pragma region Точные решения
-//    es_funcs all_es = {
-//        test1_exact_solution,
-//        test2_exact_solution,
-//        test3_exact_solution,
-//        test3_exact_solution,
-//        test3_exact_solution,
-//        test6_exact_solution,
-//        test7_exact_solution,
-//        test8_exact_solution,
-//        test3_exact_solution,
-//        test3_exact_solution
-//    };
-//#pragma endregion
+    for (int tn = 0; tn < TESTS_NUM; tn++)
+    {
+        std::cout << "RUNNING TEST CASE #" << tn << std::endl;
 
-    //for (int tn = 0; tn < TESTS_NUM; tn++)
-    //{
-    //    std::cout << "RUNNING TEST CASE #" << tn << std::endl;
-
-    //    /*solve_elliptic_problem(BASE_PATH, tn, all_f[tn], all_bc1[tn],
-    //        all_bc2[tn], all_bc3[tn], all_es[tn]);*/
-    //}
+        solve_parabolic_problem(
+            BASE_PATH,
+            tn,
+            all_f[tn],
+            all_u0[tn],
+            all_bc1[tn],
+            all_bc2[tn],
+            all_bc3[tn],
+            all_es[tn]
+        );
+    }
 
     return 0;
 }
@@ -543,8 +669,6 @@ void solve_parabolic_problem(
 #pragma endregion
 
 #pragma region Решение СЛАУ
-    BiCGM solver;
-
     std::vector<std::vector<double>> q(num_layers, std::vector<double>(num_nodes));
 
     for (int i = 0; i < 3; i++)
@@ -566,11 +690,6 @@ void solve_parabolic_problem(
             tetta2 = -(delta_t4 * delta_t0) / (delta_t5 * delta_t3 * delta_t1),
             tetta3 = (delta_t3 * delta_t0) / (delta_t5 * delta_t4 * delta_t2);
 
-        /*double tetta0 = (delta_t0 * (delta_t2 + delta_t1)) / (delta_t2 * delta_t1 * delta_t0),
-            tetta1 = -(delta_t2 * delta_t1) / (delta_t4 * delta_t3 * delta_t0),
-            tetta2 = (delta_t2 * delta_t0) / (delta_t5 * delta_t3 * delta_t1),
-            tetta3 = -(delta_t1 * delta_t0) / (delta_t5 * delta_t4 * delta_t2);*/
-
         // Формируем матрицу СЛАУ и вектор правой части
         std::vector<double> Gq_j_1(q[i - 1].size());
         G_global.dot_vector(q[i - 1], Gq_j_1);
@@ -589,12 +708,16 @@ void solve_parabolic_problem(
 
         std::vector<double> right(b_global);
         vec_diff(right, right, Gq_j_1);
-        vec_sum(right, right, Mq_j_3);
-        vec_diff(right, right, Mq_j_2);
-        vec_sum(right, right, Mq_j_1);
+        vec_diff(right, right, Mq_j_3);
+        vec_sum(right, right, Mq_j_2);
+        vec_diff(right, right, Mq_j_1);
 
-        SparseMatrix A = M_global.dot_scalar(tetta0);
+        /*SparseMatrix A = M_global.dot_scalar(tetta0);
+        A += M_S3;*/
+
+        SparseMatrix A = M_global;
         A += M_S3;
+        A = A.dot_scalar(tetta0);
 
         // Учет первых краевых
         for (int j = 0; j < num_bc1; j++)
@@ -615,10 +738,19 @@ void solve_parabolic_problem(
         }
 
         // Решаем СЛАУ
-        solver.solve(A, q[i], right);
+        BiCGM solver;
+        solver.solve(
+            A, 
+            q[i], 
+            right
+        );
 
         // Обновляем глобальный вектор
-        std::fill(b_global.begin(), b_global.end(), 0.);
+        std::fill(
+            b_global.begin(),
+            b_global.end(), 
+            0.
+        );
         
         for (int j = 0; j < num_elems; j++)
         {
@@ -802,10 +934,11 @@ double get_solution_in_point(
             delta_t4 = time_grid[j - 1] - time_grid[j - 3],
             delta_t5 = time_grid[j - 2] - time_grid[j - 3];
 
+        // изначально
         double tetta0 = (t - time_grid[j - 3]) * (t - time_grid[j - 2]) * (t - time_grid[j - 1]) / (delta_t2 * delta_t1 * delta_t0),
             tetta1 = -(t - time_grid[j - 3]) * (t - time_grid[j - 2]) * (t - time_grid[j]) / (delta_t4 * delta_t3 * delta_t0),
             tetta2 = (t - time_grid[j - 3]) * (t - time_grid[j - 1]) * (t - time_grid[j]) / (delta_t5 * delta_t3 * delta_t1),
-            tetta3 = -(t - time_grid[j - 2]) * (t - time_grid[j - 1]) * (t - time_grid[j]) / (delta_t2 * delta_t1 * delta_t0);
+            tetta3 = -(t - time_grid[j - 2]) * (t - time_grid[j - 1]) * (t - time_grid[j]) / (delta_t5 * delta_t4 * delta_t2);
 
         /*double tetta0 = (t - time_grid[j - 3]) * (t - time_grid[j - 2]) * (t - time_grid[j - 1]) / (delta_t2 * delta_t1 * delta_t0),
             tetta1 = -(t - time_grid[j - 3]) * (t - time_grid[j - 2]) * (t - time_grid[j]) / (delta_t4 * delta_t3 * delta_t0),
