@@ -30,4 +30,4 @@ double mesG(
     double x_diff = n2.x - n1.x, y_diff = n2.y - n1.y;
     
     return sqrt(x_diff * x_diff + y_diff * y_diff);
-}
+}

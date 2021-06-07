@@ -685,35 +685,26 @@ void solve_parabolic_problem(
             delta_t4 = time_grid[i - 1] - time_grid[i - 3],
             delta_t5 = time_grid[i - 2] - time_grid[i - 3];
 
-        double tetta0 = (delta_t4 * delta_t3) / (delta_t2 * delta_t1 * delta_t0),
-            tetta1 = (delta_t0 * (delta_t4 + delta_t3) - delta_t4 * delta_t3) / (delta_t4 * delta_t3 * delta_t0),
-            tetta2 = -(delta_t4 * delta_t0) / (delta_t5 * delta_t3 * delta_t1),
-            tetta3 = (delta_t3 * delta_t0) / (delta_t5 * delta_t4 * delta_t2);
+        double tetta0 = (delta_t1 * delta_t0 + delta_t0 * delta_t2 + delta_t1 * delta_t2) / delta_t1 / delta_t0 / delta_t2,
+            tetta1 = delta_t0 * delta_t1 / delta_t2 / delta_t4 / delta_t5,
+            tetta2 = delta_t0 * delta_t2 / delta_t1 / delta_t3 / delta_t5,
+            tetta3 = delta_t1 * delta_t2 / delta_t0 / delta_t3 / delta_t4;
 
-        // Формируем матрицу СЛАУ и вектор правой части
-        std::vector<double> Gq_j_1(q[i - 1].size());
-        G_global.dot_vector(q[i - 1], Gq_j_1);
+        std::vector<double> tmp(b_global.size()), right(b_global);
 
-        std::vector<double> Mq_j_3(q[i - 3].size());
-        M_global.dot_vector(q[i - 3], Mq_j_3);
-        vec_mult_scalar(tetta3, Mq_j_3);
+        SparseMatrix matM2 = M_global.dot_scalar(tetta1);
+        matM2.dot_vector(q[i - 1], tmp);
+        vec_sum(right, right, tmp);
 
-        std::vector<double> Mq_j_2(q[i - 2].size());
-        M_global.dot_vector(q[i - 2], Mq_j_2);
-        vec_mult_scalar(tetta2, Mq_j_2);
+        SparseMatrix matM3 = M_global.dot_scalar(tetta2);
+        matM3.dot_vector(q[i - 2], tmp);
+        vec_diff(right, right, tmp);
 
-        std::vector<double> Mq_j_1(q[i - 1].size());
-        M_global.dot_vector(q[i - 1], Mq_j_1);
-        vec_mult_scalar(tetta1, Mq_j_1);
-
-        std::vector<double> right(b_global);
-        vec_diff(right, right, Gq_j_1);
-        vec_diff(right, right, Mq_j_3);
-        vec_sum(right, right, Mq_j_2);
-        vec_diff(right, right, Mq_j_1);
-
-        /*SparseMatrix A = M_global.dot_scalar(tetta0);
-        A += M_S3;*/
+        matM2 = G_global.dot_scalar(-1.0);
+        SparseMatrix matM4 = M_global.dot_scalar(tetta3);
+        matM2 += matM4;
+        matM2.dot_vector(q[i - 3], tmp);
+        vec_sum(right, right, tmp);
 
         SparseMatrix A = M_global;
         A += M_S3;
